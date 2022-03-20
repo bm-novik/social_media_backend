@@ -1,0 +1,6 @@
+Hello {{name|safe}}
+You have a new notification:
+{{notification|safe}}
+
+
+Thank you!
