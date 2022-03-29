@@ -11,14 +11,15 @@ from rest_framework.views import APIView
 
 from feed.pagination import FeedPageNumberPagination
 from notification.models import Follower, Notification
-from notification.serializers import NotificationSerializer
+from notification.serializers import NotificationDetailSerializer
+
 from post.models import ImagePost
 from post.serializers import ImagePostSerializer
 
 
 class FeedHomeViewSet(viewsets.ViewSet):
-    permission_classes = [IsOwnerOrReadOnly]
-    # permission_classes = [AllowAny]
+    # permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [AllowAny]
     pagination_class = FeedPageNumberPagination
 
     def list(self, request):
@@ -33,6 +34,6 @@ class FeedHomeViewSet(viewsets.ViewSet):
             "logout_url": api_reverse("account:logout", request=request),
             "posts": ImagePostSerializer(post_queryset, many=True).data,
             'user_details': UserDetailSerializer(request.user).data,
-            "notifiations": NotificationSerializer(Notification.objects.all().filter(observers=request.user),
+            "notifiations": NotificationDetailSerializer(Notification.objects.all().filter(observers=request.user),
                                                    many=True).data}
         return Response(data)

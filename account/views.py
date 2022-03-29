@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # From rest_framework
 from django.db import transaction
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -19,7 +20,7 @@ from account.serializers import UserSerializer, RegisterSerializer, LoginSeriali
     ProfileSerializer, ProfileDetailSerializer
 from core.permissions import IsOwnerOrReadOnly
 from notification.models import Follower
-from notification.serializers import followerDetailsSerializer
+from notification.serializers import FollowerDetailsSerializer
 from post.models import ImagePost
 from post.serializers import ImagePostSerializer
 
@@ -51,8 +52,19 @@ class LoginAPIView(GenericAPIView):
         _, token = AuthToken.objects.create(user)
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "profile": ProfileDetailSerializer(user.profile).data,
             "token": token
         }, status=status.HTTP_200_OK)
+
+
+class CheckToken(GenericAPIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        user_profile = Profile.objects.all().filter(user=get_object_or_404(User.objects.all(), pk=request.user.pk))
+        if user_profile.exists():
+            return Response(ProfileDetailSerializer(user_profile.first()).data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserViewSet(viewsets.ViewSet):

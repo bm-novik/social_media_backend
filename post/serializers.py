@@ -1,4 +1,3 @@
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 from account.serializers import UserDetailSerializer
 from like.serializers import LikeSerializer

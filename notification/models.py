@@ -5,6 +5,25 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
+class NotificationQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(is_active=True)
+
+    def is_seen(self):
+        return self.filter(is_active=True, seen=False)
+
+
+class NotificationManager(models.Manager):
+    def get_queryset(self):
+        return NotificationQuerySet(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset().active()
+
+    def seen(self):
+        return self.get_queryset().is_seen()
+
+
 class Notification(models.Model):
     is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -15,6 +34,11 @@ class Notification(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
+
+    objects = NotificationManager()
+
+    def __str__(self):
+        return f'{self.observers} has notification from (contact object is..) {self.content_object}'
 
 
 class FollowerQuerySet(models.QuerySet):
@@ -51,5 +75,3 @@ class Follower(models.Model):
 
     def __str__(self):
         return f'{self.content_object} Followed By {self.observer}'
-
-

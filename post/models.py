@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models import Q
-from django.utils import timezone
 
 from like.models import Like
 from comment.models import Comment

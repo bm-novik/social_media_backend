@@ -1,4 +1,6 @@
 # From Django
+from datetime import datetime
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
@@ -7,12 +9,13 @@ from django.db import models
 
 
 # From 3rd party
+from knox.models import AuthToken
 
 # From Project
 from PIL import Image
 from django.db.models import Q
 
-from notification.Mixin import SubscribeMixin, NotifierMixin
+from notification.Mixin import SubscribeMixin
 from notification.models import Follower
 
 

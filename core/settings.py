@@ -77,7 +77,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 DATABASES = {
-"ADD DATABASE HERE"
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'final',
+        'USER': 'postgres',
+        'PASSWORD': 'kingbabar',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
 }
 
 
@@ -112,11 +119,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # gmail_send/settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'ADD HOST EMAIL HERE'
-EMAIL_HOST_PASSWORD = 'ENTER PASSWORD'
+EMAIL_HOST_USER = 'gbprojectdemo@gmail.com'
+EMAIL_HOST_PASSWORD = 'qqayqkhfjixxdxcq'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'ADD DEFAULT EMAIL HERE'
+DEFAULT_FROM_EMAIL = 'gbprojectdemo@gmail.com'
 
 # Debug Tool
 INTERNAL_IPS = [
@@ -124,7 +131,6 @@ INTERNAL_IPS = [
 ]
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny'],
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'DEFAULT_AUTHENTICATION_CLASSES': ['knox.auth.TokenAuthentication'],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
@@ -137,3 +143,25 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000"
 ]
 
+# query check
+# LOGGING = {
+#     'version': 1,
+#     'filters': {
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',
+#         }
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }

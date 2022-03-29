@@ -1,8 +1,10 @@
+from abc import ABC
+
 from notification.models import Follower
 from notification.tasks import celery_notification
 
 
-class SubscribeMixin:
+class SubscribeMixin():
 
     def subscribe(self, instance, user=None):
         observer = instance.user if user is None else user
@@ -36,7 +38,7 @@ class SubscribeMixin:
 
 class SubscribeParentMixin(SubscribeMixin):
 
-    def subscribe(self, instance):
+    def subscribe(self, instance, user=None):
 
         """Add observer who subscribed to the chat room"""
         follower = Follower.objects.filter(observer=instance.user,
@@ -54,17 +56,3 @@ class SubscribeParentMixin(SubscribeMixin):
         celery_notification(followers=followers, instance=instance)
 
 
-class NotifierMixin:
-    def notify(self, subject):
-        # self.notify_methods.objects.all()
-        notify_methods = {}
-
-
-    def notify_by_email(self):
-        pass
-
-    def notify_in_app(self):
-        pass
-
-    def notify_by_sms(self):
-        pass

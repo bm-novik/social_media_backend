@@ -4,10 +4,9 @@ import json
 from django.core.serializers import serialize
 
 from celery import shared_task
-from celery.utils.log import get_task_logger
 
 from .email import send_notification_email
-from .serializers import NotificationSerializer
+from .serializers import NotificationCreateSerializer
 
 
 @shared_task
@@ -15,13 +14,13 @@ def send_email_task(follower, instance):
     return send_notification_email(f'{follower.observer.profile.first_name} {follower.observer.profile.last_name}',
                                    follower.observer.email,
                                    f'{instance.user.profile.first_name} {instance.user.profile.last_name} has '
-                                   f'{instance.__class__.__name__} this {instance.content_object} post')  #
+                                   f'{instance.__class__.__name__} this {instance.content_object} post')
 
 
 @shared_task
 def create_notification_task(follower, instance):
     # data = json.load(data)
-    serializer = NotificationSerializer(
+    serializer = NotificationCreateSerializer(
         data={"observers": follower.observer_id, "content_type": instance.content_type_id,
               "object_id": instance.object_id})
     serializer.is_valid(raise_exception=True)

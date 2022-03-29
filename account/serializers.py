@@ -1,11 +1,11 @@
 from django.contrib.auth.hashers import make_password
 from django.db import transaction
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 from rest_framework import serializers
 
 from account.models import Profile
+from django.contrib.auth.models import User
 
 
 class LoginSerializer(serializers.Serializer):
