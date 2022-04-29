@@ -15,7 +15,7 @@ def count_comments(instance):
 @receiver(post_save, sender=Comment)
 def comment_post_save(sender, instance, created, *args, **kwargs):
     # trigger new content_object comment count calculation
-    comment_content_object = instance.content_object
+    comment_content_object = instance.content_object if not instance.parent else instance.parent.content_object
 
     if instance.is_active:
         with transaction.atomic():

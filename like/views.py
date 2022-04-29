@@ -10,9 +10,8 @@ from .pagination import LikePageNumberPagination
 from .serializers import LikeSerializer, LikeCreateSerializer
 
 
-# Lead ViewSet
+# Like ViewSet
 class LikeViewSet(viewsets.ModelViewSet):
-    # permission_classes = [permissions.AllowAny]
     permission_classes = [IsOwnerOrReadOnly]
     pagination_class = LikePageNumberPagination
     queryset = Like.objects.all()
@@ -26,11 +25,27 @@ class LikeViewSet(viewsets.ModelViewSet):
         else:
             return LikeSerializer
 
+    def create(self, request, *args, **kwargs):
+        # Check if like already exist
+        like_exists = Like.objects.all().filter(user=request.user.id,
+                                                content_type=request.data.get('content_type'),
+                                                object_id=request.data.get('object_id'))
+        if like_exists.exists():
+            return Response(status=status.HTTP_409_CONFLICT)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = Like.objects.all().filter(user=request.user.id,
+                                             content_type=request.data.get('content_type'),
+                                             object_id=request.data.get('object_id')).first()
         instance.value = 0
         instance.is_active = False
         instance.save()

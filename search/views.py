@@ -7,7 +7,7 @@ from account.models import Profile
 from account.serializers import ProfileDetailSerializer
 from core.permissions import IsOwnerOrReadOnly
 from post.models import ImagePost
-from post.serializers import ImagePostSerializer
+from post.serializers import ImagePostDetailsSerializer
 from search.pagination import searchPageNumberPagination
 
 
@@ -27,7 +27,7 @@ class SearchViewSet(viewsets.ViewSet):
                 data["profile"] = ProfileDetailSerializer(Profile.objects.search(query), many=True).data
 
             if model in ['post', None]:
-                data["post"] = ImagePostSerializer(ImagePost.objects.search(query), many=True).data
+                data["post"] = ImagePostDetailsSerializer(ImagePost.objects.search(query), many=True).data
 
             return Response(data=data)
         return Response(status.HTTP_200_OK)  # just an empty queryset as default

@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
@@ -6,11 +8,11 @@ from django.db.models import Q
 from like.models import Like
 from comment.models import Comment
 from notification.Mixin import SubscribeMixin
-from notification.models import Follower
+from notification.models import Follower, Notification
 
 
-def user_directory_path(instance, filename):
-    return 'posts/%Y/%m/%d/'.format(instance.id, filename)
+def post_directory_path(instance, filename):
+    return f'posts/{instance.author.profile.first_name}_{instance.author.profile.last_name}/{date.today()}/{filename}'
 
 
 class PostQuerySet(models.QuerySet):
@@ -33,18 +35,25 @@ class PostManager(models.Manager):
     def search(self, query):
         return self.all().search(query)
 
+    def post_by_user(self, pk=None, user_list=None):
+        if pk is not None:
+            return self.all().filter(author_id=pk)
+        if user_list is not None:
+            return self.all().filter(author_id__in=user_list.values_list('id', flat=True))
+
 
 class ImagePost(models.Model, SubscribeMixin):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
-    followers = GenericRelation(Follower, related_query_name='ImagePost')
-    # slug = models.SlugField(max_length=250, unique_for_date='publish')
-    image = models.ImageField(upload_to='posts', default='posts/default.jpg')
+
+    image = models.ImageField(upload_to=post_directory_path, default='posts/default.jpg')
     content = models.TextField()
 
     likes = GenericRelation(Like, related_query_name='ImagePost')
     like_count = models.IntegerField(default=0)
     comments = GenericRelation(Like, related_query_name='ImagePost')
     comment_count = models.IntegerField(default=0)
+    notification = GenericRelation(Notification, related_query_name='ImagePost')
+    followers = GenericRelation(Follower, related_query_name='ImagePost')
 
     is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)

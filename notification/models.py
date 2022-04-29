@@ -21,7 +21,7 @@ class NotificationManager(models.Manager):
         return self.get_queryset().active()
 
     def seen(self):
-        return self.get_queryset().is_seen()
+        return self.all().is_seen()
 
 
 class Notification(models.Model):
@@ -29,6 +29,8 @@ class Notification(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    notification_massage = models.CharField(max_length=128, null=True, blank=True)
+    sender = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True, blank=True)
     observers = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True, blank=True)
     seen = models.BooleanField(default=False)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -37,8 +39,11 @@ class Notification(models.Model):
 
     objects = NotificationManager()
 
+    class Meta:
+        ordering = ['-date_created']
+
     def __str__(self):
-        return f'{self.observers} has notification from (contact object is..) {self.content_object}'
+        return f'{self.observers} has notification from (contact object is..) {self.content_object.__class__.__name__}'
 
 
 class FollowerQuerySet(models.QuerySet):
@@ -52,6 +57,14 @@ class FollowerManager(models.Manager):
 
     def all(self):
         return self.get_queryset().active()
+
+    def follow_status(self, observer_id, object_id):
+        if observer_id == object_id:
+            return None
+        qs = self.all().filter(is_active=True, observer_id=observer_id, content_type=11, object_id=object_id)
+        if qs.exists():
+            return True
+        return False
 
 
 class Follower(models.Model):

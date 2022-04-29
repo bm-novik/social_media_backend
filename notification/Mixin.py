@@ -1,5 +1,3 @@
-from abc import ABC
-
 from notification.models import Follower
 from notification.tasks import celery_notification
 
@@ -7,8 +5,8 @@ from notification.tasks import celery_notification
 class SubscribeMixin():
 
     def subscribe(self, instance, user=None):
+
         observer = instance.user if user is None else user
-        """Add observer who subscribed to the chat room"""
         qs = Follower.objects.filter(observer=observer,
                                      content_type=instance.content_type,
                                      object_id=instance.object_id)
@@ -31,15 +29,14 @@ class SubscribeMixin():
     def notify(self, instance):
         """Alert the observers"""
         followers = Follower.objects.filter(content_type=instance.content_type,
-                                           object_id=instance.object_id)
+                                            object_id=instance.object_id)
 
-        celery_notification(followers, instance)
+        celery_notification(followers=followers, instance=instance)
 
 
 class SubscribeParentMixin(SubscribeMixin):
 
     def subscribe(self, instance, user=None):
-
         """Add observer who subscribed to the chat room"""
         follower = Follower.objects.filter(observer=instance.user,
                                            content_type=instance.content_object.content_type,
@@ -52,7 +49,6 @@ class SubscribeParentMixin(SubscribeMixin):
 
     def notify(self, instance):
         """Alert the observers"""
-        followers = self.objects.all().exclude(instance)
+        followers = Follower.objects.filter(content_type=instance.content_object.content_type,
+                                            object_id=instance.content_object.object_id)
         celery_notification(followers=followers, instance=instance)
-
-

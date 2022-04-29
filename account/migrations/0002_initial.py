@@ -18,11 +18,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='profile',
-            name='followers',
-            field=models.ManyToManyField(blank=True, related_name='following', to='notification.Follower'),
-        ),
-        migrations.AddField(
-            model_name='profile',
             name='user',
             field=models.OneToOneField(on_delete=django.db.models.deletion.RESTRICT, related_name='profile', to=settings.AUTH_USER_MODEL),
         ),

@@ -1,3 +1,7 @@
+from django.contrib.contenttypes.models import ContentType
+
+from account.serializers import UserDetailSerializer
+from like.models import Like
 from .models import Comment
 from mptt.forms import TreeNodeChoiceField
 from rest_framework import serializers
@@ -8,7 +12,6 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        # fields = ('__all__')
         exclude = ['user', 'is_active', 'like_count']
 
     def create(self, validated_data):
@@ -19,21 +22,31 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 class CommentDetailSerializer(serializers.ModelSerializer):
     last_comment = serializers.SerializerMethodField()
     is_parent = serializers.SerializerMethodField()
-
-    # children = serializers.SerializerMethodField()
+    content_type = serializers.SerializerMethodField()
+    did_like = serializers.SerializerMethodField()
+    user = UserDetailSerializer(read_only=True)
 
     class Meta:
         model = Comment
-        exclude = ['is_active', 'like_count', "lft", "rght", "tree_id", "level", "parent", "date_created", "updated_at"]
+        exclude = ['is_active', "lft", "rght", "tree_id", "level", "updated_at"]
 
-    def get_last_comment(self, obj):
+    @staticmethod
+    def get_content_type(obj):
+        return ContentType.objects.get_for_model(obj).id
+
+    @staticmethod
+    def get_last_comment(obj):
         return obj.is_leaf_node()
 
-    def get_is_parent(self, obj):
+    @staticmethod
+    def get_is_parent(obj):
         return obj.parent is None
 
-    # def get_children(self, obj):
-    #     return obj.get_children().filter(is_active=True)
+    def get_did_like(self, obj):
+        request = self.context.get('request')
+        if request:
+            return Like.objects.is_liked(obj, request.user)
+        return None
 
 
 class CommentUpdateSerializer(serializers.ModelSerializer):

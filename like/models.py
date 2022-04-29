@@ -4,12 +4,10 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django.db import models
 
+
 class likeQuerySet(models.QuerySet):
     def active(self):
         return self.filter(is_active=True)
-
-    def class_name(self):
-        return(Like)
 
 
 class likeManager(models.Manager):
@@ -19,8 +17,11 @@ class likeManager(models.Manager):
     def all(self):
         return self.get_queryset().active()
 
-    def class_name(self):
-        return "Like"
+    def is_liked(self, obj, user):
+        obj_like = self.all().filter(content_type=ContentType.objects.get_for_model(obj),
+                                     object_id=obj.id,
+                                     user=user)
+        return True if obj_like.exists() else False
 
 
 class Like(models.Model):
