@@ -14,7 +14,6 @@ from .models import Notification
 @shared_task
 def send_email_task(data):
     data = json.loads(data)
-    print(type(data))
     return send_notification_email(name=data.get('name'),
                                    email=data.get('email'),
                                    notification=data['notification'].get('notification_massage')
@@ -24,7 +23,6 @@ def send_email_task(data):
 @shared_task
 def create_notification_task(data):
     data = json.loads(data)
-
     Notification(observers=get_object_or_404(User, pk=data['notification'].get('observers')),
                  content_type=ContentType.objects.get_for_id(data['notification']['content_type']),
                  object_id=data['notification'].get('object_id'),
