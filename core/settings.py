@@ -142,15 +142,5 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000"
+    "ec2-44-198-56-21.compute-1.amazonaws.com"
 ]
-
-# # gmail_send/settings.py
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'gbprojectdemo@gmail.com'
-# EMAIL_HOST_PASSWORD = 'qqayqkhfjixxdxcq'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'gbprojectdemo@gmail.com'

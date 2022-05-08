@@ -8,12 +8,12 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
 
 
-    path('', include('like.urls', namespace='like')),
-    path('', include('notification.urls', namespace='follower')),
-    path('', include('post.urls', namespace='post')),
-    path('', include('comment.urls', namespace='comment')),
-    path('', include('search.urls', namespace='search')),
-    path('', include('account.urls', namespace='account')),  # Must be last!!!
+    path('api/', include('like.urls', namespace='like')),
+    path('api/', include('notification.urls', namespace='follower')),
+    path('api/', include('post.urls', namespace='post')),
+    path('api/', include('comment.urls', namespace='comment')),
+    path('api/', include('search.urls', namespace='search')),
+    path('api/', include('account.urls', namespace='account')),  # Must be last!!!
 
 ]
 
