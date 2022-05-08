@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import timedelta
 from rest_framework.settings import api_settings
 
-with open('config.json') as fh:
+with open(os.path.join('core', 'config.json')) as fh:
     config = json.load(fh)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'final',
+        'NAME': 'config["DATABASES"]["NAME"]',
         'USER': config["DATABASES"]["USER"],
         'PASSWORD': config["DATABASES"]["PASSWORD"],
-        'HOST': '127.0.0.1',
+        'HOST': config["DATABASES"]["HOST"],
         'PORT': '5432',
     }
 }
