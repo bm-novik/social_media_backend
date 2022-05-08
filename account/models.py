@@ -1,10 +1,9 @@
 # From Django
-from datetime import datetime, date
+from datetime import date
 
-from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core import validators
 from django.db import models
 
 

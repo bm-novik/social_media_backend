@@ -25,7 +25,7 @@ class ProfilePageDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ["id", 'first_name', 'last_name', 'profile_pic', 'bio', 'gender',
-                  'followers_count', 'following_count', 'post_count', 'follow_status',  'website']
+                  'followers_count', 'following_count', 'post_count', 'follow_status', 'website']
         read_only_fields = ["id"]
 
     @staticmethod
@@ -79,21 +79,12 @@ class ProfilePictureUpdate(serializers.ModelSerializer):
     # def update(self, instance, validated_data):
 
 
-
 #######################################################################################################################
 # USER
 #######################################################################################################################
 
 class RegisterSerializer(serializers.ModelSerializer):
     profile = ProfileDetailSerializer()
-    # profile_pic = serializers.ImageField(source="account_profile.profile_pic")
-    # first_name = serializers.CharField(source="account_profile.first_name")
-    # last_name = serializers.CharField(source="account_profile.last_name")
-    # phone = serializers.CharField(source="account_profile.phone")
-    # website = serializers.URLField(source="account_profile.website")
-    # bio = serializers.CharField(source="account_profile.bio")
-    # birth_day = serializers.DateTimeField(source="account_profile.birth_day")
-    # gender = serializers.DateTimeField(source="account_profile.gender")
 
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     confirm_password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
@@ -101,7 +92,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'password', 'confirm_password', 'profile']
-                  # 'first_name', 'last_name', 'gender', 'phone', 'website', 'bio', 'birth_day', 'profile_pic']
         write_only_fields = ['password']
         read_only_fields = ["id"]
 
@@ -156,7 +146,6 @@ class UserPasswordUpdate(serializers.ModelSerializer):
             instance.save()
             return instance
         raise serializers.ValidationError("Something went wrong, if the problem continues please contact us")
-
 
 
 class LoginSerializer(serializers.Serializer):

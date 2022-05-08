@@ -6,7 +6,7 @@ from django.db import transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView, get_object_or_404
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
@@ -18,7 +18,7 @@ from knox.models import AuthToken
 from account.models import Profile
 from account.pagination import ProfilePageNumberPagination
 from account.serializers import UserSerializer, RegisterSerializer, LoginSerializer, \
-    ProfileSerializer, ProfileDetailSerializer, UserPasswordUpdate, UserDetailSerializer, \
+    ProfileSerializer, UserPasswordUpdate, UserDetailSerializer, \
     UserProfileDetailSerializer, ProfilePictureUpdate
 from core.permissions import IsOwnerOrReadOnly, IsOwnerOnly
 

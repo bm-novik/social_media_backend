@@ -25,6 +25,10 @@ class LikeViewSet(viewsets.ModelViewSet):
         else:
             return LikeSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        pass
+
+
     def create(self, request, *args, **kwargs):
         # Check if like already exist
         like_exists = Like.objects.all().filter(user=request.user.id,
