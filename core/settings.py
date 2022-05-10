@@ -14,7 +14,12 @@ SECRET_KEY = config["SECRET_KEY"]
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-44-198-56-21.compute-1.amazonaws.com', 'localhost']
+ALLOWED_HOSTS = [
+    'ec2-44-198-56-21.compute-1.amazonaws.com',
+    'localhost',
+    '127.0.0.1',
+    '44.198.56.21',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -144,5 +149,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://44.198.56.21/",
     "http://ec2-44-198-56-21.compute-1.amazonaws.com"
 ]
